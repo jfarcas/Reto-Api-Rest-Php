@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Api Rest Php" default="build">
+    <target name="build" depends="clean-cache, lint, phpcs, phpunit" />
+
+    <!-- Lint the PHP files in app dir. Linting the whole framework library takes forever -->
+    <target name="lint" description="Perform syntax check of sourcecode files">
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+            <fileset dir="${basedir}/src">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+        </apply>
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+            <fileset dir="${basedir}/src">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+        </apply>
+    </target>
+
+    <target name="phpcs" description="Check code with PHP Code Sniffer">
+        <exec executable="${basedir}/bin/phpcs" failonerror="true">
+            <arg value="-n" />
+            <arg value="--extensions=php" />
+            <arg value="--error-severity=1" />
+            <arg value="--standard=PSR2" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <!-- Run tests with phpunit -->
+    <target name="phpunit" depends="fixtures, clean-cache, phpcs, lint">
+        <exec executable="${basedir}/bin/phpunit" failonerror="true" description="Run unit app with PHPUnit">
+            <arg line="--verbose" />
+            <arg value="tests" />
+        </exec>
+    </target>
+
+    <!-- clear cache -->
+    <target name="clean-cache" description="Clean symfony cache">
+        <exec executable="php" failonerror="true">
+            <arg value='bin/console' />
+            <arg value="cache:clear" />
+            <arg value="--env=test" />
+        </exec>
+
+        <echo>
+            This is a longer message stretching over
+            three lines; the first line is a blank
+        </echo>
+    </target>
+
+    <target name="coverage" depends="phpunit">
+        <exec executable="${basedir}/bin/phpunit9" failonerror="true" description="Run unit app with PHPUnit">
+            <arg line="--verbose" />
+            <arg value="--coverage-html" />
+            <arg value="${basedir}/tests/build/coverage" />
+            <arg value="tests" />
+        </exec>
+    </target>
+
+    <!-- Run any DB schema updates -->
+    <target name="dbDelete" description="Delete Schema">
+        <exec executable="php">
+            <arg value='bin/console' />
+            <arg value="doctrine:schema:drop" />
+            <arg value="--force" />
+            <arg value="--env=test" />
+            <arg value='-n' />
+        </exec>
+    </target>
+
+    <!-- Run any DB schema updates -->
+    <target name="dbCreate" depends="dbDelete" description="Create Schema">
+        <exec executable="php">
+            <arg value='bin/console' />
+            <arg value="doctrine:schema:create" />
+            <arg value="--env=test" />
+            <arg value='-n' />
+        </exec>
+    </target>
+
+    <!-- Run any DB schema updates -->
+    <target name="dbUpdate" depends="dbCreate" description="Update Schema">
+        <exec executable="php" failonerror="true">
+            <arg value='bin/console' />
+            <arg value="doctrine:schema:update" />
+            <arg value="--force" />
+            <arg value="--env=test" />
+            <arg value='-n' />
+        </exec>
+    </target>
+
+    <!-- Update fixtures-->
+    <target name="fixtures" depends="dbUpdate" description="Update fixtures">
+    <exec executable="php" failonerror="true">
+        <arg value='bin/console' />
+        <arg value="doctrine:fixtures:load" />
+        <arg value="--env=test" />
+        <arg value='-n' />
+    </exec>
+    </target>
+
+
+</project>

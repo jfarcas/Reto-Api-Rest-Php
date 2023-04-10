@@ -1,0 +1,43 @@
+index:
+    path: /
+    controller: App\Controller\JokeController::getJokes
+
+jokes:
+  path: /api/v1/jokes
+  controller: App\Controller\JokeController::getJokes
+  methods:    GET|HEAD|OPTIONS
+
+jokes-create:
+  path: /api/v1/jokes
+  controller: App\Controller\JokeController::createJoke
+  methods:    POST
+
+jokes-update:
+  path: /api/v1/jokes/{number}
+  controller: App\Controller\JokeController::updateJoke
+  methods:    PUT
+
+jokes-delete:
+  path: /api/v1/jokes/{number}
+  controller: App\Controller\JokeController::deleteJoke
+  methods:    DELETE
+
+jokes-by-type:
+  path: /api/v1/jokes-by-type/{type}
+  controller: App\Controller\JokeController::getJokesByType
+  methods:    GET|HEAD|OPTIONS
+
+random-jokes:
+  path: /api/v1/jokes/random
+  controller: App\Controller\JokeController::getRandomJoke
+  methods:    GET|HEAD|OPTIONS
+
+mathematical-lcm:
+  path: /api/v1/math/least-common-multiple
+  controller: App\Controller\MathController::getLeastCommonMultiple
+  methods:    GET|HEAD|OPTIONS
+
+mathematical-increment:
+  path: /api/v1/math/increment
+  controller: App\Controller\MathController::getIncrementedNumber
+  methods:    GET|HEAD|OPTIONS
