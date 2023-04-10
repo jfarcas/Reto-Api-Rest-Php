@@ -1,0 +1,248 @@
+components:
+  examples: {}
+  headers: {}
+  parameters: {}
+  requestBodies: {}
+  responses: {}
+  schemas:
+    Joke:
+      properties:
+        number:
+          type: number
+          format: int
+        joke:
+          type: string
+        type:
+          type: string
+      required:
+        - number
+        - joke
+        - type
+      type: object
+      additionalProperties: false
+    JokeWrite:
+      properties:
+        joke:
+          type: string
+        type:
+          type: string
+      required:
+        - joke
+        - type
+      type: object
+      additionalProperties: false
+    CommonMultiple:
+      properties:
+        numbers:
+          items:
+            type: number
+            format: int
+          type: array
+        leastCommonMultiple:
+          type: number
+          format: int
+      required:
+        - numbers
+        - leastCommonMultiple
+      type: object
+      additionalProperties: false
+    IncrementedNumber:
+      properties:
+        number:
+          type: number
+          format: int
+        incrementedNumber:
+          type: number
+          format: int
+      required:
+        - number
+        - incrementedNumber
+      type: object
+      additionalProperties: false
+  securitySchemes: {}
+info:
+  title: api-rest-php
+  version: 1.0.0
+  description: SquadMakers Reto Php
+  license:
+    name: ISC
+  contact:
+    name: Iulian Farcas
+openapi: 3.0.0
+paths:
+  /jokes:
+    get:
+      operationId: GetJokes
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Joke'
+                type: array
+      tags:
+        - Jokes
+      security: []
+      parameters: []
+    post:
+      operationId: CreateJoke
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Joke'
+      tags:
+        - Jokes
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JokeWrite'
+  /jokes/by-types/{type}:
+    get:
+      operationId: GetJokesByType
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Joke'
+      tags:
+        - Jokes
+      security: []
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            type: string
+  /jokes/random:
+    get:
+      operationId: GetRandomJoke
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Joke'
+      tags:
+        - Jokes
+      security: []
+      parameters: []
+  /jokes/{number}:
+    put:
+      operationId: UpdateJoke
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Joke'
+      tags:
+        - Jokes
+      security: []
+      parameters:
+        - in: path
+          name: number
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JokeWrite'
+    get:
+      operationId: GetJoke
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Joke'
+                nullable: true
+      tags:
+        - Jokes
+      security: []
+      parameters:
+        - in: path
+          name: number
+          required: true
+          schema:
+            type: string
+    delete:
+      operationId: DeleteJoke
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+      tags:
+        - Jokes
+      security: []
+      parameters:
+        - in: path
+          name: number
+          required: true
+          schema:
+            type: string
+  /math/least-common-multiple:
+    get:
+      operationId: GetLeastCommonMultiple
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommonMultiple'
+      tags:
+        - Mathematical
+      security: []
+      parameters:
+        - in: query
+          name: numbers
+          required: true
+          schema:
+            type: array
+            items:
+              type: number
+              format: int
+  /math/increment:
+    get:
+      operationId: GetIncrementedNumber
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncrementedNumber'
+      tags:
+        - Mathematical
+      security: []
+      parameters:
+        - in: query
+          name: number
+          required: true
+          schema:
+            format: int
+            type: number
+servers:
+  - url: /
